@@ -61,10 +61,19 @@ h1 {
   background: #1d4ed8;
 }
 
+.todo-form button:disabled {
+  background: #93c5fd;
+  cursor: wait;
+}
+
 .message {
   min-height: 24px;
   margin: 12px 0 0;
   color: #b91c1c;
+}
+
+.message[data-tone="success"] {
+  color: #15803d;
 }
 
 .todo-list {

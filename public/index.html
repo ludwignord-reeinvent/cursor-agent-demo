@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todos</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="card">
+        <h1>Todos</h1>
+        <p class="subtitle">Add a task and keep the list simple.</p>
+
+        <form id="todo-form" class="todo-form">
+          <input
+            id="todo-input"
+            name="text"
+            type="text"
+            placeholder="What needs to be done?"
+            autocomplete="off"
+            required
+          />
+          <button type="submit">Add</button>
+        </form>
+
+        <p id="message" class="message" aria-live="polite"></p>
+        <ul id="todo-list" class="todo-list"></ul>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("todo-form");
+      const input = document.getElementById("todo-input");
+      const list = document.getElementById("todo-list");
+      const message = document.getElementById("message");
+
+      function renderTodos(todos) {
+        list.innerHTML = "";
+
+        if (todos.length === 0) {
+          const emptyItem = document.createElement("li");
+          emptyItem.className = "empty-state";
+          emptyItem.textContent = "No todos yet.";
+          list.appendChild(emptyItem);
+          return;
+        }
+
+        todos.forEach((todo) => {
+          const item = document.createElement("li");
+          item.className = "todo-item";
+          item.textContent = todo.text;
+          list.appendChild(item);
+        });
+      }
+
+      async function loadTodos() {
+        const response = await fetch("/api/todos");
+        if (!response.ok) {
+          throw new Error("Failed to load todos");
+        }
+
+        const todos = await response.json();
+        renderTodos(todos);
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        message.textContent = "";
+
+        const text = input.value.trim();
+        if (!text) {
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/todos", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text })
+          });
+
+          if (!response.ok) {
+            message.textContent = "Could not add todo.";
+            return;
+          }
+
+          input.value = "";
+          input.focus();
+          await loadTodos();
+        } catch {
+          message.textContent = "Could not add todo.";
+        }
+      });
+
+      loadTodos().catch(() => {
+        message.textContent = "Could not load todos.";
+      });
+    </script>
+  </body>
+</html>

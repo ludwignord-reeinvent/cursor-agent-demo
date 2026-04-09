@@ -66,6 +66,28 @@ h1 {
   cursor: wait;
 }
 
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.filter-button {
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #374151;
+  padding: 8px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.filter-button.is-active {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
 .message {
   min-height: 24px;
   margin: 12px 0 0;
@@ -90,6 +112,43 @@ h1 {
   border-radius: 10px;
   background: #f8fafc;
   border: 1px solid #e5e7eb;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.todo-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.todo-label input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.todo-text {
+  word-break: break-word;
+}
+
+.todo-text.is-completed {
+  color: #6b7280;
+  text-decoration: line-through;
+}
+
+.remove-button {
+  border: 0;
+  background: transparent;
+  color: #dc2626;
+  font: inherit;
+  cursor: pointer;
 }
 
 .empty-state {

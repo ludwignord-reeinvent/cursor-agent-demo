@@ -10,7 +10,7 @@
     <main class="app">
       <section class="card">
         <h1>Todos</h1>
-        <p class="subtitle">Add a task and it will be saved locally.</p>
+        <p class="subtitle">Add, complete, filter, and remove saved todos.</p>
 
         <form id="todo-form" class="todo-form">
           <input
@@ -24,6 +24,18 @@
           <button type="submit">Add</button>
         </form>
 
+        <div class="filters" role="group" aria-label="Filter todos">
+          <button type="button" class="filter-button is-active" data-filter="all">
+            All
+          </button>
+          <button type="button" class="filter-button" data-filter="active">
+            Active
+          </button>
+          <button type="button" class="filter-button" data-filter="completed">
+            Completed
+          </button>
+        </div>
+
         <p id="message" class="message" aria-live="polite"></p>
         <ul id="todo-list" class="todo-list"></ul>
       </section>
@@ -34,28 +46,77 @@
       const input = document.getElementById("todo-input");
       const list = document.getElementById("todo-list");
       const message = document.getElementById("message");
+      const filterButtons = document.querySelectorAll(".filter-button");
       const submitButton = form.querySelector("button");
+      let todos = [];
+      let activeFilter = "all";
 
       function setMessage(text, tone = "error") {
         message.textContent = text;
         message.dataset.tone = text ? tone : "";
       }
 
-      function renderTodos(todos) {
-        list.innerHTML = "";
+      function getVisibleTodos() {
+        if (activeFilter === "active") {
+          return todos.filter((todo) => !todo.completed);
+        }
 
-        if (todos.length === 0) {
+        if (activeFilter === "completed") {
+          return todos.filter((todo) => todo.completed);
+        }
+
+        return todos;
+      }
+
+      function renderTodos() {
+        list.innerHTML = "";
+        const visibleTodos = getVisibleTodos();
+
+        if (visibleTodos.length === 0) {
           const emptyItem = document.createElement("li");
           emptyItem.className = "empty-state";
-          emptyItem.textContent = "No todos yet.";
+          emptyItem.textContent =
+            activeFilter === "all"
+              ? "No todos yet."
+              : `No ${activeFilter} todos.`;
           list.appendChild(emptyItem);
           return;
         }
 
-        todos.forEach((todo) => {
+        visibleTodos.forEach((todo) => {
           const item = document.createElement("li");
           item.className = "todo-item";
-          item.textContent = todo.text;
+
+          const label = document.createElement("label");
+          label.className = "todo-label";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = todo.completed;
+          checkbox.addEventListener("change", async () => {
+            await updateTodo(todo.id, { completed: checkbox.checked });
+          });
+
+          const text = document.createElement("span");
+          text.className = "todo-text";
+          if (todo.completed) {
+            text.classList.add("is-completed");
+          }
+          text.textContent = todo.text;
+
+          label.appendChild(checkbox);
+          label.appendChild(text);
+
+          const removeButton = document.createElement("button");
+          removeButton.type = "button";
+          removeButton.className = "remove-button";
+          removeButton.textContent = "Remove";
+          removeButton.addEventListener("click", async () => {
+            await deleteTodo(todo.id);
+          });
+
+          item.appendChild(label);
+          item.appendChild(removeButton);
           list.appendChild(item);
         });
       }
@@ -66,8 +127,54 @@
           throw new Error("Failed to load todos");
         }
 
-        const todos = await response.json();
-        renderTodos(todos);
+        todos = await response.json();
+        renderTodos();
+      }
+
+      async function updateTodo(id, updates) {
+        setMessage("");
+
+        try {
+          const response = await fetch(`/api/todos/${id}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updates)
+          });
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => null);
+            setMessage(data?.error || "Could not update todo.");
+            await loadTodos();
+            return;
+          }
+
+          await loadTodos();
+        } catch {
+          setMessage("Could not update todo.");
+          await loadTodos().catch(() => {});
+        }
+      }
+
+      async function deleteTodo(id) {
+        setMessage("");
+
+        try {
+          const response = await fetch(`/api/todos/${id}`, {
+            method: "DELETE"
+          });
+
+          if (!response.ok) {
+            const data = await response.json().catch(() => null);
+            setMessage(data?.error || "Could not remove todo.");
+            return;
+          }
+
+          await loadTodos();
+        } catch {
+          setMessage("Could not remove todo.");
+        }
       }
 
       form.addEventListener("submit", async (event) => {
@@ -108,6 +215,21 @@
 
       loadTodos().catch(() => {
         setMessage("Could not load todos.");
+      });
+
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          activeFilter = button.dataset.filter;
+
+          filterButtons.forEach((filterButton) => {
+            filterButton.classList.toggle(
+              "is-active",
+              filterButton === button
+            );
+          });
+
+          renderTodos();
+        });
       });
     </script>
   </body>

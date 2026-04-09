@@ -10,7 +10,7 @@
     <main class="app">
       <section class="card">
         <h1>Todos</h1>
-        <p class="subtitle">Add a task and keep the list simple.</p>
+        <p class="subtitle">Add a task and it will be saved locally.</p>
 
         <form id="todo-form" class="todo-form">
           <input
@@ -34,6 +34,12 @@
       const input = document.getElementById("todo-input");
       const list = document.getElementById("todo-list");
       const message = document.getElementById("message");
+      const submitButton = form.querySelector("button");
+
+      function setMessage(text, tone = "error") {
+        message.textContent = text;
+        message.dataset.tone = text ? tone : "";
+      }
 
       function renderTodos(todos) {
         list.innerHTML = "";
@@ -66,7 +72,7 @@
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        message.textContent = "";
+        setMessage("");
 
         const text = input.value.trim();
         if (!text) {
@@ -74,6 +80,7 @@
         }
 
         try {
+          submitButton.disabled = true;
           const response = await fetch("/api/todos", {
             method: "POST",
             headers: {
@@ -83,20 +90,24 @@
           });
 
           if (!response.ok) {
-            message.textContent = "Could not add todo.";
+            const data = await response.json().catch(() => null);
+            setMessage(data?.error || "Could not add todo.");
             return;
           }
 
           input.value = "";
           input.focus();
           await loadTodos();
+          setMessage("Todo saved.", "success");
         } catch {
-          message.textContent = "Could not add todo.";
+          setMessage("Could not add todo.");
+        } finally {
+          submitButton.disabled = false;
         }
       });
 
       loadTodos().catch(() => {
-        message.textContent = "Could not load todos.";
+        setMessage("Could not load todos.");
       });
     </script>
   </body>

@@ -3,27 +3,6 @@
 }
 
 :root {
-  color-scheme: light;
-  --page-background: #f4f7fb;
-  --card-background: #ffffff;
-  --surface-background: #f8fafc;
-  --text-color: #1f2937;
-  --muted-color: #6b7280;
-  --border-color: #d1d5db;
-  --subtle-border-color: #e5e7eb;
-  --primary-color: #2563eb;
-  --primary-hover-color: #1d4ed8;
-  --primary-muted-color: #93c5fd;
-  --primary-soft-background: #dbeafe;
-  --primary-soft-border: #93c5fd;
-  --primary-soft-text: #1d4ed8;
-  --danger-color: #dc2626;
-  --success-color: #15803d;
-  --error-color: #b91c1c;
-  --shadow-color: rgba(15, 23, 42, 0.08);
-}
-
-body[data-theme="dark"] {
   color-scheme: dark;
   --page-background: #0f172a;
   --card-background: #111827;
@@ -66,13 +45,6 @@ body {
   box-shadow: 0 10px 30px var(--shadow-color);
 }
 
-.card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
 h1 {
   margin: 0 0 8px;
   font-size: 2rem;
@@ -81,16 +53,6 @@ h1 {
 .subtitle {
   margin: 0 0 20px;
   color: var(--muted-color);
-}
-
-.theme-toggle {
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--text-color);
-  padding: 8px 12px;
-  font: inherit;
-  cursor: pointer;
 }
 
 .todo-form {

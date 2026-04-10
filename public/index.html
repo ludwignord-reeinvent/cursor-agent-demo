@@ -9,15 +9,8 @@
   <body>
     <main class="app">
       <section class="card">
-        <div class="card-header">
-          <div>
-            <h1>Todos</h1>
-            <p class="subtitle">Add, complete, filter, and remove saved todos.</p>
-          </div>
-          <button id="theme-toggle" type="button" class="theme-toggle">
-            Dark mode
-          </button>
-        </div>
+        <h1>Todos</h1>
+        <p class="subtitle">Add, complete, filter, and remove saved todos.</p>
 
         <form id="todo-form" class="todo-form">
           <input
@@ -54,23 +47,9 @@
       const list = document.getElementById("todo-list");
       const message = document.getElementById("message");
       const filterButtons = document.querySelectorAll(".filter-button");
-      const themeToggle = document.getElementById("theme-toggle");
       const submitButton = form.querySelector("button");
       let todos = [];
       let activeFilter = "all";
-
-      function applyTheme(theme) {
-        document.body.dataset.theme = theme;
-        themeToggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
-      }
-
-      function initializeTheme() {
-        const savedTheme = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = savedTheme || (prefersDark ? "dark" : "light");
-
-        applyTheme(theme);
-      }
 
       function setMessage(text, tone = "error") {
         message.textContent = text;
@@ -252,16 +231,6 @@
           renderTodos();
         });
       });
-
-      themeToggle.addEventListener("click", () => {
-        const nextTheme =
-          document.body.dataset.theme === "dark" ? "light" : "dark";
-
-        localStorage.setItem("theme", nextTheme);
-        applyTheme(nextTheme);
-      });
-
-      initializeTheme();
     </script>
   </body>
 </html>

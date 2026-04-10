@@ -2,11 +2,32 @@
   box-sizing: border-box;
 }
 
+:root {
+  color-scheme: dark;
+  --page-background: #0f172a;
+  --card-background: #111827;
+  --surface-background: #1f2937;
+  --text-color: #e5e7eb;
+  --muted-color: #9ca3af;
+  --border-color: #374151;
+  --subtle-border-color: #374151;
+  --primary-color: #60a5fa;
+  --primary-hover-color: #3b82f6;
+  --primary-muted-color: #1d4ed8;
+  --primary-soft-background: #1e3a8a;
+  --primary-soft-border: #2563eb;
+  --primary-soft-text: #dbeafe;
+  --danger-color: #f87171;
+  --success-color: #4ade80;
+  --error-color: #f87171;
+  --shadow-color: rgba(2, 6, 23, 0.45);
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f4f7fb;
-  color: #1f2937;
+  background: var(--page-background);
+  color: var(--text-color);
 }
 
 .app {
@@ -18,10 +39,10 @@ body {
 
 .card {
   width: min(100%, 480px);
-  background: #ffffff;
+  background: var(--card-background);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 30px var(--shadow-color);
 }
 
 h1 {
@@ -31,7 +52,7 @@ h1 {
 
 .subtitle {
   margin: 0 0 20px;
-  color: #6b7280;
+  color: var(--muted-color);
 }
 
 .todo-form {
@@ -42,8 +63,10 @@ h1 {
 .todo-form input {
   flex: 1;
   padding: 12px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
+  background: var(--card-background);
+  color: var(--text-color);
   font: inherit;
 }
 
@@ -51,18 +74,18 @@ h1 {
   border: 0;
   border-radius: 10px;
   padding: 12px 18px;
-  background: #2563eb;
+  background: var(--primary-color);
   color: #ffffff;
   font: inherit;
   cursor: pointer;
 }
 
 .todo-form button:hover {
-  background: #1d4ed8;
+  background: var(--primary-hover-color);
 }
 
 .todo-form button:disabled {
-  background: #93c5fd;
+  background: var(--primary-muted-color);
   cursor: wait;
 }
 
@@ -73,29 +96,29 @@ h1 {
 }
 
 .filter-button {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-color);
   border-radius: 999px;
-  background: #ffffff;
-  color: #374151;
+  background: var(--card-background);
+  color: var(--text-color);
   padding: 8px 12px;
   font: inherit;
   cursor: pointer;
 }
 
 .filter-button.is-active {
-  background: #dbeafe;
-  border-color: #93c5fd;
-  color: #1d4ed8;
+  background: var(--primary-soft-background);
+  border-color: var(--primary-soft-border);
+  color: var(--primary-soft-text);
 }
 
 .message {
   min-height: 24px;
   margin: 12px 0 0;
-  color: #b91c1c;
+  color: var(--error-color);
 }
 
 .message[data-tone="success"] {
-  color: #15803d;
+  color: var(--success-color);
 }
 
 .todo-list {
@@ -110,8 +133,8 @@ h1 {
 .empty-state {
   padding: 14px;
   border-radius: 10px;
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
+  background: var(--surface-background);
+  border: 1px solid var(--subtle-border-color);
 }
 
 .todo-item {
@@ -139,19 +162,19 @@ h1 {
 }
 
 .todo-text.is-completed {
-  color: #6b7280;
+  color: var(--muted-color);
   text-decoration: line-through;
 }
 
 .remove-button {
   border: 0;
   background: transparent;
-  color: #dc2626;
+  color: var(--danger-color);
   font: inherit;
   cursor: pointer;
 }
 
 .empty-state {
-  color: #6b7280;
+  color: var(--muted-color);
   text-align: center;
 }

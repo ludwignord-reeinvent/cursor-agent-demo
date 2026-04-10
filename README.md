@@ -1,6 +1,6 @@
 # cursor-agent-demo
 
-Minimal Node.js + Express todo app with a single page for adding, filtering, completing, and removing todos.
+Minimal Node.js + Express todo app with a single page for adding, filtering, completing, removing, and viewing todos in dark mode.
 Todos are persisted locally with SQLite.
 
 ## Run
